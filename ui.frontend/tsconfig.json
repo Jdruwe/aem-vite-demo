@@ -1,13 +1,23 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "es6",
-        "baseUrl": "../ui.frontend",
-        "removeComments": true,
-        "allowJs": true,
-        "preserveConstEnums": true,
-        "allowSyntheticDefaultImports": true,
-        "sourceMap": true
-    },
-    "include": [ "./src/**/*.ts" ]
+  "compilerOptions": {
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": [
+      "esnext",
+      "dom"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
+  ]
 }
