@@ -1,0 +1,8 @@
+{
+  "principalName": "client-lib-manager-user",
+  "operation": "add",
+  "ensure-immediately": true,
+  "aces": [
+    "type=allow;privileges=jcr:read;path=/apps/aem-vite-demo/clientlibs"
+  ]
+}

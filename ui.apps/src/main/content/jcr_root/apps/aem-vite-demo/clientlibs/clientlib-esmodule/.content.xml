@@ -4,4 +4,5 @@
           categories="[aem-vite-demo.esmodule]"
           cssProcessor="[default:none,min:none]"
           jsProcessor="[default:none,min:none]"
-          allowProxy="{Boolean}true"/>
+          allowProxy="{Boolean}true"
+          viteTarget="/src/main.ts"/>

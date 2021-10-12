@@ -4,19 +4,20 @@ import be.jeroendruwe.core.models.ClientLibManager;
 import com.adobe.granite.ui.clientlibs.ClientLibrary;
 import com.adobe.granite.ui.clientlibs.HtmlLibraryManager;
 import com.adobe.granite.ui.clientlibs.LibraryType;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.*;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 @Model(
         adaptables = {SlingHttpServletRequest.class},
@@ -25,6 +26,13 @@ import java.util.Set;
 )
 public class ClientLibManagerImpl implements ClientLibManager {
 
+    //TODO: we should use some kind of config mechanism to toggle between vite in dev mode and clientlib everywhere else.
+
+    private static final Logger LOG = LoggerFactory.getLogger(ClientLibManagerImpl.class);
+
+    private static final String CLIENT_LIB_MANAGER_SERVICE = "client-lib-manager";
+    private static final String PN_VITE_TARGET = "viteTarget";
+
     @Inject
     @Named(OPTION_CATEGORIES)
     private Object categories;
@@ -32,16 +40,15 @@ public class ClientLibManagerImpl implements ClientLibManager {
     @OSGiService
     private HtmlLibraryManager htmlLibraryManager;
 
-    private String[] categoriesArray;
+    @OSGiService
+    private ResourceResolverFactory resolverFactory;
 
-    //TODO: adapt to the model if needed!
-//    private ClientLibraries clientLibraries;
+    private String[] categoriesArray;
 
     @PostConstruct
     protected void initModel() {
         Set<String> categoriesSet = getStrings(categories);
         categoriesArray = categoriesSet.toArray(new String[0]);
-        System.out.println();
     }
 
     private Set<String> getStrings(@Nullable final Object input) {
@@ -61,21 +68,37 @@ public class ClientLibManagerImpl implements ClientLibManager {
 
     @Override
     public String getJsIncludes() {
+
+        List<String> viteClientLibs = new ArrayList<>();
+
         Collection<ClientLibrary> libraries = htmlLibraryManager.getLibraries(categoriesArray, LibraryType.JS, true, false);
-
-        return null;
-    }
-
-    //TODO: use resourceResolverFactory and custom user with the correct rights
-    private boolean clientlibHasProperty(ClientLibrary lib, String property) {
-        Resource libResource = resourceResolver.resolve(lib.getPath());
-
-        if (!ResourceUtil.isNonExistingResource(libResource)) {
-            ValueMap libProps = libResource.getValueMap();
-
-            return Boolean.TRUE.equals(libProps.get(property, Boolean.class));
+        for (ClientLibrary library : libraries) {
+            Optional<String> viteTarget = getViteTarget(library);
+            //TODO: move this dev server info into a config? + enabled state based conf .cfg.json env variable
+            viteTarget.ifPresent(s -> viteClientLibs.add("<script type=\"module\" src=\"http://localhost:3000" + s + "\"></script>"));
         }
 
-        return false;
+        if (!viteClientLibs.isEmpty()) {
+            viteClientLibs.add("<script type=\"module\" src=\"http://localhost:3000/@vite/client\"></script>");
+            Collections.reverse(viteClientLibs);
+        }
+
+        return StringUtils.join(viteClientLibs, StringUtils.EMPTY);
+    }
+
+    private Optional<String> getViteTarget(ClientLibrary lib) {
+        try (ResourceResolver resourceResolver = resolverFactory.getServiceResourceResolver(Collections.singletonMap(ResourceResolverFactory.SUBSERVICE, CLIENT_LIB_MANAGER_SERVICE))) {
+            Resource clientLibResource = resourceResolver.getResource(lib.getPath());
+            if (clientLibResource != null) {
+                ValueMap valueMap = clientLibResource.getValueMap();
+                String viteTarget = valueMap.get(PN_VITE_TARGET, String.class);
+                if (StringUtils.isNotBlank(viteTarget)) {
+                    return Optional.of(viteTarget);
+                }
+            }
+        } catch (LoginException e) {
+            LOG.error("Cannot login as a service user", e);
+        }
+        return Optional.empty();
     }
 }

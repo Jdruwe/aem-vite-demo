@@ -1,0 +1,5 @@
+{
+  "user.mapping": [
+    "aem-vite-demo.core:client-lib-manager=client-lib-manager-user"
+  ]
+}
