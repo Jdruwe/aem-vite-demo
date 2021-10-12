@@ -48,6 +48,7 @@
         <vault.password>admin</vault.password>
         <frontend-maven-plugin.version>1.12.0</frontend-maven-plugin.version>
         <core.wcm.components.version>2.17.2</core.wcm.components.version>
+        <acs.aem.commons.version>5.0.12</acs.aem.commons.version>
 
         <bnd.version>5.1.2</bnd.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -718,7 +719,29 @@ Bundle-DocURL:
                 <artifactId>core.wcm.components.config</artifactId>
                 <type>zip</type>
                 <version>${core.wcm.components.version}</version>
-            </dependency
+            </dependency>
+
+            <!-- ACS AEM Commons -->
+            <dependency>
+                <groupId>com.adobe.acs</groupId>
+                <artifactId>acs-aem-commons-bundle</artifactId>
+                <version>${acs.aem.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.adobe.acs</groupId>
+                <artifactId>acs-aem-commons-ui.apps</artifactId>
+                <version>${acs.aem.commons.version}</version>
+                <classifier>min</classifier>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>com.adobe.acs</groupId>
+                <artifactId>acs-aem-commons-ui.content</artifactId>
+                <version>${acs.aem.commons.version}</version>
+                <classifier>min</classifier>
+                <type>zip</type>
+            </dependency>
+
             <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
