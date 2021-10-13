@@ -10,10 +10,8 @@
   "license": "SEE LICENSE IN LICENSE.txt",
   "scripts": {
     "dev": "vite",
-    "vite-build-dev": "vite build --mode development",
-    "vite-build-prd": "vite build --mode production",
+    "prod": "vite build",
     "dev-old": "webpack -d --env dev --config ./webpack.dev.js && clientlib --verbose",
-    "prod": "",
     "prod-older": "clientlib --verbose",
     "prd-old": "webpack -p --config ./webpack.prod.js && clientlib --verbose",
     "start": "webpack-dev-server --open --config ./webpack.dev.js",
@@ -21,7 +19,6 @@
     "watch": "webpack-dev-server --config ./webpack.dev.js --env.writeToDisk & watch 'clientlib' ./dist & aemsync -w ../ui.apps/src/main/content"
   },
   "devDependencies": {
-    "@aem-vite/import-rewriter": "^3.0.1",
     "@babel/core": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.3.3",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
