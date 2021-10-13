@@ -6,7 +6,7 @@
     <sly data-sly-resource="${'contexthub' @ resourceType='granite/contexthub/components/contexthub'}"/>
 
     <sly data-sly-use.clientlibs="${'be.jeroendruwe.core.models.ClientLibManager' @ categories=page.ESModuleClientlibCategories}">
-        ${clientlibs.jsIncludes @ context="unsafe"}
+        ${clientlibs.getIncludes @ context="unsafe"}
     </sly>
 </template>
 

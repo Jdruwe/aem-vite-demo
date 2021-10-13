@@ -5,4 +5,4 @@
           cssProcessor="[default:none,min:none]"
           jsProcessor="[default:none,min:none]"
           allowProxy="{Boolean}true"
-          viteTarget="/src/main.ts"/>
+          viteTarget="src/index.ts"/>

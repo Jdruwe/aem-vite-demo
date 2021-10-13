@@ -6,7 +6,7 @@ import org.osgi.annotation.versioning.ConsumerType;
 public interface ClientLibManager {
     String OPTION_CATEGORIES = "categories";
 
-    default String getJsIncludes() {
+    default String getIncludes() {
         return null;
     }
 }

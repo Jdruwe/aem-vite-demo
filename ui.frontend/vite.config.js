@@ -1,5 +1,7 @@
-import {defineConfig} from 'vite'
-import vue from '@vitejs/plugin-vue'
+import {defineConfig} from 'vite';
+import vue from '@vitejs/plugin-vue';
+
+//TODO: rework this file as we don't need all of this anymore!
 import aemViteImportRewriter from '@aem-vite/import-rewriter';
 
 export default defineConfig(({command, mode}) => ({
@@ -17,7 +19,7 @@ export default defineConfig(({command, mode}) => ({
                 entryFileNames: 'aem-vite-demo.epic/js/[name].js',
             },
             input: {
-                bundle: 'src/main.ts',
+                bundle: 'src/index.ts',
             },
         },
     },

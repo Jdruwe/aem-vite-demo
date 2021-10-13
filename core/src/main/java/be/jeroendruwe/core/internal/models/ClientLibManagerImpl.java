@@ -1,6 +1,8 @@
-package be.jeroendruwe.core.models.internal;
+package be.jeroendruwe.core.internal.models;
 
 import be.jeroendruwe.core.models.ClientLibManager;
+import be.jeroendruwe.core.services.ClientLibManagerConfigService;
+import com.adobe.cq.wcm.core.components.models.ClientLibraries;
 import com.adobe.granite.ui.clientlibs.ClientLibrary;
 import com.adobe.granite.ui.clientlibs.HtmlLibraryManager;
 import com.adobe.granite.ui.clientlibs.LibraryType;
@@ -10,13 +12,12 @@ import org.apache.sling.api.resource.*;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
+import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.*;
 
 @Model(
@@ -26,16 +27,13 @@ import java.util.*;
 )
 public class ClientLibManagerImpl implements ClientLibManager {
 
-    //TODO: we should use some kind of config mechanism to toggle between vite in dev mode and clientlib everywhere else.
-
     private static final Logger LOG = LoggerFactory.getLogger(ClientLibManagerImpl.class);
 
     private static final String CLIENT_LIB_MANAGER_SERVICE = "client-lib-manager";
     private static final String PN_VITE_TARGET = "viteTarget";
 
-    @Inject
-    @Named(OPTION_CATEGORIES)
-    private Object categories;
+    @Self
+    private SlingHttpServletRequest request;
 
     @OSGiService
     private HtmlLibraryManager htmlLibraryManager;
@@ -43,12 +41,26 @@ public class ClientLibManagerImpl implements ClientLibManager {
     @OSGiService
     private ResourceResolverFactory resolverFactory;
 
-    private String[] categoriesArray;
+    @OSGiService
+    private ClientLibManagerConfigService configService;
+
+    private String includes;
 
     @PostConstruct
     protected void initModel() {
-        Set<String> categoriesSet = getStrings(categories);
-        categoriesArray = categoriesSet.toArray(new String[0]);
+        this.includes = buildIncludes();
+    }
+
+    /**
+     * Vite enabled -> load clientlibs based on categories using viteTarget, if no target is set, the clientLib will be ignored.
+     * Vite disabled -> load clientlibs based on categories using ClientLibraries provided by Core Components.
+     */
+    private String buildIncludes() {
+        if (configService.isViteEnabled()) {
+            return getViteModules();
+        } else {
+            return getClientLibIncludes();
+        }
     }
 
     private Set<String> getStrings(@Nullable final Object input) {
@@ -67,19 +79,34 @@ public class ClientLibManagerImpl implements ClientLibManager {
     }
 
     @Override
-    public String getJsIncludes() {
+    public String getIncludes() {
+        return includes;
+    }
+
+    private String getClientLibIncludes() {
+        ClientLibraries clientLibraries = request.adaptTo(ClientLibraries.class);
+        if (clientLibraries != null) {
+            return clientLibraries.getJsAndCssIncludes();
+        } else {
+            LOG.error("Could not adapt request to ClientLibraries");
+            return null;
+        }
+    }
+
+    private String getViteModules() {
+        Set<String> categoriesSet = getStrings(request.getAttribute(OPTION_CATEGORIES));
+        String[] categoriesArray = categoriesSet.toArray(new String[0]);
 
         List<String> viteClientLibs = new ArrayList<>();
 
         Collection<ClientLibrary> libraries = htmlLibraryManager.getLibraries(categoriesArray, LibraryType.JS, true, false);
         for (ClientLibrary library : libraries) {
             Optional<String> viteTarget = getViteTarget(library);
-            //TODO: move this dev server info into a config? + enabled state based conf .cfg.json env variable
-            viteTarget.ifPresent(s -> viteClientLibs.add("<script type=\"module\" src=\"http://localhost:3000" + s + "\"></script>"));
+            viteTarget.ifPresent(s -> viteClientLibs.add("<script type=\"module\" src=\"" + configService.getServerUrl() + s + "\"></script>"));
         }
 
         if (!viteClientLibs.isEmpty()) {
-            viteClientLibs.add("<script type=\"module\" src=\"http://localhost:3000/@vite/client\"></script>");
+            viteClientLibs.add("<script type=\"module\" src=\"" + configService.getServerUrl() + "@vite/client\"></script>");
             Collections.reverse(viteClientLibs);
         }
 
