@@ -1,5 +1,7 @@
 package be.jeroendruwe.core.services;
 
+import com.adobe.granite.ui.clientlibs.ClientLibrary;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -8,5 +10,5 @@ public interface ModuleBasedClientLibService {
 
     boolean isApplicable(Map<String, Object> props);
 
-    Set<String> getIncludes();
+    Set<String> getIncludes(ClientLibrary library, Map<String, Object> props);
 }

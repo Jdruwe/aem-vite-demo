@@ -27,7 +27,7 @@ module.exports = {
   libs: [
     {
       ...libsBaseConfig,
-      customProperties: ['viteTarget', 'moduleIdentifier'],
+      customProperties: ['moduleIdentifier', 'viteTarget'],
       moduleIdentifier: 'vite',
       viteTarget: 'src/index.ts',
       name: 'clientlib-esmodule',

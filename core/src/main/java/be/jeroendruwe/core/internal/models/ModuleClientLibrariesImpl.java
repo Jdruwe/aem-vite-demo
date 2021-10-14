@@ -1,7 +1,6 @@
 package be.jeroendruwe.core.internal.models;
 
 import be.jeroendruwe.core.models.ModuleClientLibraries;
-import be.jeroendruwe.core.services.ClientLibManagerConfigService;
 import be.jeroendruwe.core.services.ClientLibManagerService;
 import be.jeroendruwe.core.services.ModuleBasedClientLibService;
 import com.adobe.granite.ui.clientlibs.ClientLibrary;
@@ -35,8 +34,6 @@ public class ModuleClientLibrariesImpl implements ModuleClientLibraries {
     private static final Logger LOG = LoggerFactory.getLogger(ModuleClientLibrariesImpl.class);
 
     private static final String CLIENT_LIB_MANAGER_SERVICE = "client-lib-manager";
-    private static final String PN_MODULE_IDENTIFIER = "moduleIdentifier";
-    private static final String PN_VITE_TARGET = "viteTarget";
 
     @Inject
     @Named(OPTION_CATEGORIES)
@@ -52,9 +49,6 @@ public class ModuleClientLibrariesImpl implements ModuleClientLibraries {
     private ResourceResolverFactory resolverFactory;
 
     @OSGiService
-    private ClientLibManagerConfigService configService;
-
-    @OSGiService
     private ClientLibManagerService clientLibManagerService;
 
     private Set<String> includes;
@@ -66,10 +60,10 @@ public class ModuleClientLibrariesImpl implements ModuleClientLibraries {
         if (!moduleBasedClientLibServices.isEmpty()) {
             Collection<ClientLibrary> libraries = htmlLibraryManager.getLibraries(getCategoryNames(), null, true, false);
             for (ClientLibrary library : libraries) {
-                Map<String, Object> properties = geClientLibraryProperties(library);
+                Map<String, Object> props = geClientLibraryProperties(library);
                 for (ModuleBasedClientLibService moduleBasedClientLibService : moduleBasedClientLibServices) {
-                    if (moduleBasedClientLibService.isApplicable(properties)) {
-                        includes.addAll(moduleBasedClientLibService.getIncludes());
+                    if (moduleBasedClientLibService.isApplicable(props)) {
+                        includes.addAll(moduleBasedClientLibService.getIncludes(library, props));
                         break;
                     }
                 }
