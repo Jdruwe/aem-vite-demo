@@ -44,58 +44,15 @@ module.exports = {
     libs: [
         {
             ...libsBaseConfig,
-            name: 'clientlib-dependencies',
-            categories: ['aem-vite-demo.dependencies'],
-            assets: {
-                // Copy entrypoint scripts and stylesheets into the respective ClientLib
-                // directories
-                js: {
-                    cwd: 'clientlib-dependencies',
-                    files: ['**/*.js'],
-                    flatten: false
-                },
-                css: {
-                    cwd: 'clientlib-dependencies',
-                    files: ['**/*.css'],
-                    flatten: false
-                }
-            }
-        },
-        {
-            ...libsBaseConfig,
-            name: 'clientlib-site',
-            categories: ['aem-vite-demo.site'],
-            dependencies: ['aem-vite-demo.dependencies'],
-            assets: {
-                // Copy entrypoint scripts and stylesheets into the respective ClientLib
-                // directories
-                js: {
-                    cwd: 'clientlib-site',
-                    files: ['**/*.js'],
-                    flatten: false
-                },
-                css: {
-                    cwd: 'clientlib-site',
-                    files: ['**/*.css'],
-                    flatten: false
-                },
-
-                // Copy all other files into the `resources` ClientLib directory
-                resources: {
-                    cwd: 'clientlib-site',
-                    files: ['**/*.*'],
-                    flatten: false,
-                    ignore: ['**/*.js', '**/*.css']
-                }
-            }
-        },
-        {
-            ...libsBaseConfig,
-            name: 'clientlib-epic',
-            categories: ['aem-vite-demo.epic'],
+            customProperties: [
+                "viteTarget"
+            ],
+            viteTarget: 'src/index.ts',
+            name: 'clientlib-esmodule',
+            categories: ['aem-vite-demo.esmodule'],
             assets: {
                 resources: {
-                    cwd: 'aem-vite-demo.epic',
+                    cwd: 'aem-vite-demo.esmodule',
                     files: ['**/*.*'],
                     flatten: false
                 }
