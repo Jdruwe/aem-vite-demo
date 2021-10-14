@@ -126,7 +126,7 @@
                     <artifactId>frontend-maven-plugin</artifactId>
                     <version>${frontend-maven-plugin.version}</version>
                     <configuration>
-                        <nodeVersion>v14.16.0</nodeVersion>
+                        <nodeVersion>v14.18.1</nodeVersion>
                         <yarnVersion>v1.22.15</yarnVersion>
                     </configuration>
                     <executions>
