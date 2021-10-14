@@ -3,13 +3,11 @@ package be.jeroendruwe.core.internal.services;
 import be.jeroendruwe.core.services.ModuleBasedClientLibService;
 import be.jeroendruwe.core.services.ViteDevServerConfig;
 import com.adobe.granite.ui.clientlibs.ClientLibrary;
-import org.jetbrains.annotations.NotNull;
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.*;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -17,10 +15,7 @@ import java.util.*;
 @Designate(ocd = ViteClientLibServiceImpl.Config.class)
 public class ViteClientLibServiceImpl implements ModuleBasedClientLibService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ViteClientLibServiceImpl.class);
-
     private static final String IDENTIFIER = "vite";
-    private static final String PN_VITE_TARGET = "viteTarget";
 
     private final List<ViteDevServerConfig> devServerConfigurations = new ArrayList<>();
     private Config config;
@@ -47,23 +42,11 @@ public class ViteClientLibServiceImpl implements ModuleBasedClientLibService {
     @Override
     public Set<String> getIncludes(ClientLibrary library) {
         if (isViteDevServerEnabled()) {
-            //TODO: fix if we use multiple categories
-            Optional<ViteDevServerConfig> devServerConfig = getDevServerConfig(library.getCategories()[0]);
-            if (devServerConfig.isPresent()) {
-                return getViteDevModules(devServerConfig.get());
-            } else {
-                LOG.error("Vite dev server is enabled but no '{}' was set for: '{}'", PN_VITE_TARGET, library.getPath());
-            }
+            return getViteDevModules(library);
         } else {
             //TODO: serve clientlibs using assets withing the library.
         }
         return Collections.emptySet();
-    }
-
-    private Optional<ViteDevServerConfig> getDevServerConfig(String category) {
-        return devServerConfigurations.stream()
-                                      .filter(c -> c.getCategory().equals(category))
-                                      .findFirst();
     }
 
     @ObjectClassDefinition(name = "Vite Dev Server Integration Configuration")
@@ -81,12 +64,27 @@ public class ViteClientLibServiceImpl implements ModuleBasedClientLibService {
         return config.viteDevServerEnabled();
     }
 
-    private Set<String> getViteDevModules(@NotNull ViteDevServerConfig config) {
+    private Set<String> getViteDevModules(ClientLibrary library) {
         Set<String> libs = new LinkedHashSet<>();
-        String viteDevServerUrl = getViteDevServerUrl(config);
-        libs.add("<script type=\"module\" src=\"" + viteDevServerUrl + "@vite/client\"></script>");
-        libs.add("<script type=\"module\" src=\"" + viteDevServerUrl + config.getEntry() + "\"></script>");
+        for (String category : library.getCategories()) {
+            getDevServerConfig(category).ifPresent(c -> {
+                String viteDevServerUrl = getViteDevServerUrl(c);
+                libs.add("<script type=\"module\" src=\"" + viteDevServerUrl + "@vite/client\"></script>");
+                libs.add("<script type=\"module\" src=\"" + viteDevServerUrl + c.getEntry() + "\"></script>");
+            });
+        }
         return libs;
+    }
+
+    private Optional<ViteDevServerConfig> getDevServerConfig(String category) {
+        return devServerConfigurations.stream()
+                                      .filter(c -> StringUtils.equals(c.getCategory(), category))
+                                      .filter(this::isValidDevServerConfig)
+                                      .findFirst();
+    }
+
+    private boolean isValidDevServerConfig(ViteDevServerConfig c) {
+        return StringUtils.isNoneBlank(c.getEntry(), c.getProtocol(), c.getPort(), c.getHostname());
     }
 
     private String getViteDevServerUrl(ViteDevServerConfig config) {
