@@ -126,20 +126,20 @@
                     <artifactId>frontend-maven-plugin</artifactId>
                     <version>${frontend-maven-plugin.version}</version>
                     <configuration>
-                        <nodeVersion>v10.13.0</nodeVersion>
-                        <npmVersion>6.9.0</npmVersion>
+                        <nodeVersion>v14.16.0</nodeVersion>
+                        <yarnVersion>v1.22.15</yarnVersion>
                     </configuration>
                     <executions>
                         <execution>
-                            <id>install node and npm</id>
+                            <id>install node and yarn</id>
                             <goals>
-                                <goal>install-node-and-npm</goal>
+                                <goal>install-node-and-yarn</goal>
                             </goals>
                         </execution>
                         <execution>
-                            <id>npm install</id>
+                            <id>yarn install</id>
                             <goals>
-                                <goal>npm</goal>
+                                <goal>yarn</goal>
                             </goals>
                         </execution>
                     </executions>
