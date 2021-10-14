@@ -11,13 +11,11 @@
   "scripts": {
     "dev": "vite",
     "type-check": "vue-tsc --noEmit",
-    "prod": "yarn run type-check && vite build && clientlib --verbose",
-    "sync": "aemsync -d -p ../ui.apps/src/main/content"
+    "prod": "yarn run type-check && vite build && clientlib --verbose"
   },
   "devDependencies": {
     "@jeroendruwe/aem-clientlib-generator": "^1.7.8",
     "@vitejs/plugin-vue": "^1.9.3",
-    "aemsync": "^4.0.1",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-vue": "^7.19.1",
