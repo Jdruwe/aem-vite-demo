@@ -1,4 +1,4 @@
-package be.jeroendruwe.core.models;
+package be.jeroendruwe.core.internal.models;
 
 import com.adobe.cq.export.json.ComponentExporter;
 import com.adobe.cq.wcm.core.components.models.HtmlPageItem;
