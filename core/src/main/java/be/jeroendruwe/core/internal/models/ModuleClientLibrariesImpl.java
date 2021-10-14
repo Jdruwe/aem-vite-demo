@@ -55,7 +55,7 @@ public class ModuleClientLibrariesImpl implements ModuleClientLibraries {
 
     @PostConstruct
     protected void initModel() {
-        includes = new HashSet<>();
+        includes = new LinkedHashSet<>();
         List<ModuleBasedClientLibService> moduleBasedClientLibServices = clientLibManagerService.getModuleBasedClientLibServices();
         if (!moduleBasedClientLibServices.isEmpty()) {
             Collection<ClientLibrary> libraries = htmlLibraryManager.getLibraries(getCategoryNames(), null, true, false);
@@ -63,7 +63,7 @@ public class ModuleClientLibrariesImpl implements ModuleClientLibraries {
                 Map<String, Object> props = geClientLibraryProperties(library);
                 for (ModuleBasedClientLibService moduleBasedClientLibService : moduleBasedClientLibServices) {
                     if (moduleBasedClientLibService.isApplicable(props)) {
-                        includes.addAll(moduleBasedClientLibService.getIncludes(library, props));
+                        includes.addAll(moduleBasedClientLibService.getIncludes(library));
                         break;
                     }
                 }

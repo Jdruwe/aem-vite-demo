@@ -1,13 +1,12 @@
 import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
   server: {
-    port: 3000,
+    port: 3001,
     strictPort: true,
   },
   build: {
-    outDir: 'dist/aem-vite-demo.esmodule',
+    outDir: 'dist/aem-vite-demo.esmodule.other',
     brotliSize: false,
     manifest: false,
     rollupOptions: {
@@ -19,9 +18,8 @@ export default defineConfig({
         },
       ],
       input: {
-        bundle: 'src/index.ts',
+        other: 'src/other.ts',
       },
     },
   },
-  plugins: [vue()],
 });

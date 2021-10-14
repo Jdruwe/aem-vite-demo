@@ -27,14 +27,27 @@ module.exports = {
   libs: [
     {
       ...libsBaseConfig,
-      customProperties: ['moduleIdentifier', 'viteTarget'],
+      customProperties: ['moduleIdentifier'],
       moduleIdentifier: 'vite',
-      viteTarget: 'src/index.ts',
       name: 'clientlib-esmodule',
       categories: ['aem-vite-demo.esmodule'],
       assets: {
         resources: {
           cwd: 'aem-vite-demo.esmodule',
+          files: ['**/*.*'],
+          flatten: false,
+        },
+      },
+    },
+    {
+      ...libsBaseConfig,
+      customProperties: ['moduleIdentifier'],
+      moduleIdentifier: 'vite',
+      name: 'clientlib-esmodule-other',
+      categories: ['aem-vite-demo.esmodule.other'],
+      assets: {
+        resources: {
+          cwd: 'aem-vite-demo.esmodule.other',
           files: ['**/*.*'],
           flatten: false,
         },
