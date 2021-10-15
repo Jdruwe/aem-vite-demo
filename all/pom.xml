@@ -106,6 +106,12 @@
                             <type>zip</type>
                             <target>/apps/aem-vite-demo-vendor-packages/content/install</target>
                         </embedded>
+                        <embedded>
+                            <groupId>dev.aemvite</groupId>
+                            <artifactId>aem-vite.all</artifactId>
+                            <type>zip</type>
+                            <target>/apps/aem-vite-demo-vendor-packages/application/install</target>
+                        </embedded>
                     </embeddeds>
                 </configuration>
             </plugin>
@@ -236,6 +242,12 @@
             <groupId>com.adobe.acs</groupId>
             <artifactId>acs-aem-commons-ui.content</artifactId>
             <classifier>min</classifier>
+            <type>zip</type>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.aemvite</groupId>
+            <artifactId>aem-vite.all</artifactId>
             <type>zip</type>
         </dependency>
 
