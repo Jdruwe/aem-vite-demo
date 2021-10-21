@@ -50,6 +50,7 @@
                 <configuration>
                     <properties>
                         <cloudManagerTarget>none</cloudManagerTarget>
+                        <acHandling>merge_preserve</acHandling>
                     </properties>
                     <group>be.jeroendruwe</group>
                     <name>aem-vite-demo.ui.apps</name>

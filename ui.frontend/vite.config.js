@@ -1,27 +1,36 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import aemViteImportRewriter from '@aem-vite/import-rewriter';
 
-export default defineConfig({
-  server: {
-    port: 3000,
-    strictPort: true,
-  },
+export default defineConfig(({ command, mode }) => ({
   build: {
-    outDir: 'dist/aem-vite-demo.esmodule',
     brotliSize: false,
-    manifest: false,
+    manifest: true,
+    minify: mode === 'development' ? false : 'terser',
+    outDir: 'dist',
+    sourcemap: command === 'serve' ? 'inline' : false,
+
     rollupOptions: {
-      output: [
-        {
-          assetFileNames: '[ext]/[name][extname]',
-          chunkFileNames: 'chunks/[name].[hash].js',
-          entryFileNames: 'js/[name].js',
-        },
-      ],
+      output: {
+        assetFileNames: 'clientlib-vite/resources/[ext]/[name][extname]',
+        chunkFileNames: 'clientlib-vite/resources/js/[name].[hash].js',
+        entryFileNames: 'clientlib-vite/resources/js/[name].js',
+      },
       input: {
-        bundle: 'src/index.ts',
+        app: 'src/aem-vite.ts',
       },
     },
   },
-  plugins: [vue()],
-});
+  plugins: [
+    vue(),
+    // ... all other plugins before, 'aemViteImportRewriter' must be last
+    {
+      ...aemViteImportRewriter({
+        publicPath: '/etc.clientlibs/aem-vite-demo/clientlibs/',
+      }),
+
+      apply: 'build',
+      enforce: 'pre',
+    },
+  ],
+}));

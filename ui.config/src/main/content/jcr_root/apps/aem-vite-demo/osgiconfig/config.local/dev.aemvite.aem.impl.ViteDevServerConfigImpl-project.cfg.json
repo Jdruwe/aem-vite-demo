@@ -1,0 +1,12 @@
+{
+  "automatic.injection": true,
+  "clientlib.categories": ["aem-vite.base"],
+  "content.paths": ["/content/aem-vite-demo"],
+  "manual.injection.selector": "vite",
+  "devserver.protocol": "http",
+  "devserver.hostname": "127.0.0.1",
+  "devserver.docker": false,
+  "devserver.port": 3000,
+  "devserver.entrypoints": ["src/aem-vite.ts"],
+  "using.react": false
+}

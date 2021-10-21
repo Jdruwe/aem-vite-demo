@@ -9,13 +9,13 @@
   "private": true,
   "license": "SEE LICENSE IN LICENSE.txt",
   "scripts": {
-    "dev": "concurrently \"vite -c vite.config.js\" \"vite -c other.vite.config.js\"",
-    "type-check": "vue-tsc --noEmit",
+    "dev": "concurrently \"vite\"",
     "create-clientlibs": "clientlib --verbose",
-    "build-vite": "vite build -c vite.config.js && vite build -c other.vite.config.js",
-    "prod": "yarn run type-check && yarn run build-vite && yarn run create-clientlibs"
+    "build-vite": "vite build",
+    "prod": "yarn run build-vite && yarn run create-clientlibs"
   },
   "devDependencies": {
+    "@aem-vite/import-rewriter": "^3.0.1",
     "@jeroendruwe/aem-clientlib-generator": "^1.7.8",
     "@vitejs/plugin-vue": "^1.9.3",
     "concurrently": "^6.3.0",

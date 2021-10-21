@@ -27,31 +27,40 @@ module.exports = {
   libs: [
     {
       ...libsBaseConfig,
-      customProperties: ['moduleIdentifier'],
-      moduleIdentifier: 'vite',
-      name: 'clientlib-esmodule',
-      categories: ['aem-vite-demo.esmodule'],
+      name: 'clientlib-vite',
+      categories: ['aem-vite.base'],
+      customProperties: ['esModule'],
+      esModule: true,
       assets: {
-        resources: {
-          cwd: 'aem-vite-demo.esmodule',
-          files: ['**/*.*'],
-          flatten: false,
+        // Copy entrypoint scripts and stylesheets into the respective ClientLib
+        // directories
+        js: {
+          base: 'resources/js',
+          cwd: 'clientlib-vite',
+          files: ['**/*.js'],
+          flatten: true,
+        },
+        css: {
+          base: 'resources/css',
+          cwd: 'clientlib-vite',
+          files: ['**/*.css'],
+          flatten: true,
         },
       },
     },
-    {
-      ...libsBaseConfig,
-      customProperties: ['moduleIdentifier'],
-      moduleIdentifier: 'vite',
-      name: 'clientlib-esmodule-other',
-      categories: ['aem-vite-demo.esmodule.other'],
-      assets: {
-        resources: {
-          cwd: 'aem-vite-demo.esmodule.other',
-          files: ['**/*.*'],
-          flatten: false,
-        },
-      },
-    },
+    // {
+    //   ...libsBaseConfig,
+    //   customProperties: ['esModule'],
+    //   esModule: true,
+    //   name: 'clientlib-vite',
+    //   categories: ['aem-vite.base'],
+    //   assets: {
+    //     resources: {
+    //       cwd: 'aem-vite.base',
+    //       files: ['**/*.*'],
+    //       flatten: false,
+    //     },
+    //   },
+    // },
   ],
 };

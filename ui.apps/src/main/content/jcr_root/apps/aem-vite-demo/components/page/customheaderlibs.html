@@ -5,8 +5,8 @@
 
     <sly data-sly-resource="${'contexthub' @ resourceType='granite/contexthub/components/contexthub'}"/>
 
-    <sly data-sly-use.clientlibs="${'be.jeroendruwe.core.models.ModuleClientLibraries' @ categories=page.ESModuleClientlibCategories}">
-        ${clientlibs.getIncludes @ context="unsafe"}
+    <sly data-sly-use.viteClientlib="/apps/aem-vite/granite/sightly/templates/clientlib.html">
+        <sly data-sly-call="${viteClientlib.all @ categories='aem-vite.base', esModule=true}"></sly>
     </sly>
 </template>
 
