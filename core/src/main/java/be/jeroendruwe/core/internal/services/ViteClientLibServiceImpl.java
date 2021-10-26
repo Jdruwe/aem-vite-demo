@@ -1,6 +1,7 @@
 package be.jeroendruwe.core.internal.services;
 
 import be.jeroendruwe.core.services.ModuleBasedClientLibService;
+import be.jeroendruwe.core.services.TagGenerationService;
 import be.jeroendruwe.core.services.ViteDevServerConfig;
 import com.adobe.granite.ui.clientlibs.ClientLibrary;
 import org.apache.commons.lang3.StringUtils;
@@ -10,7 +11,6 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component(service = ModuleBasedClientLibService.class)
 @Designate(ocd = ViteClientLibServiceImpl.Config.class)
@@ -18,12 +18,11 @@ public class ViteClientLibServiceImpl implements ModuleBasedClientLibService {
 
     private static final String IDENTIFIER = "vite";
 
-    private static final String PN_SCRIPTS = "scripts";
-    private static final String PN_PRELOADS = "preloads";
-    private static final String PN_STYLESHEETS = "stylesheets";
-
     private final List<ViteDevServerConfig> devServerConfigurations = new ArrayList<>();
     private Config config;
+
+    @Reference
+    private TagGenerationService tagGenerationService;
 
     @Reference(
             service = ViteDevServerConfig.class,
@@ -49,7 +48,7 @@ public class ViteClientLibServiceImpl implements ModuleBasedClientLibService {
         if (isViteDevServerEnabled()) {
             return getViteDevModules(library);
         } else {
-            return getViteModules(props);
+            return tagGenerationService.generateTags(props);
         }
     }
 
@@ -78,41 +77,6 @@ public class ViteClientLibServiceImpl implements ModuleBasedClientLibService {
             });
         }
         return libs;
-    }
-
-    private Set<String> getViteModules(Map<String, Object> props) {
-        Set<String> libs = new LinkedHashSet<>();
-        libs.addAll(getScripts(props));
-        libs.addAll(getPreloads(props));
-        libs.addAll(getStylesheets(props));
-        return libs;
-    }
-
-    private Set<String> getScripts(Map<String, Object> props) {
-        String[] scripts = (String[]) props.get(PN_SCRIPTS);
-        if (scripts != null) {
-            return Arrays.stream(scripts).map(script -> "<script type=\"module\" crossorigin src=\"" + script + "\"></script>").collect(Collectors.toSet());
-        } else {
-            return Collections.emptySet();
-        }
-    }
-
-    private Set<String> getPreloads(Map<String, Object> props) {
-        String[] preloads = (String[]) props.get(PN_PRELOADS);
-        if (preloads != null) {
-            return Arrays.stream(preloads).map(preload -> "<link rel=\"modulepreload\" href=\"" + preload + "\">").collect(Collectors.toSet());
-        } else {
-            return Collections.emptySet();
-        }
-    }
-
-    private Set<String> getStylesheets(Map<String, Object> props) {
-        String[] stylesheets = (String[]) props.get(PN_STYLESHEETS);
-        if (stylesheets != null) {
-            return Arrays.stream(stylesheets).map(stylesheet -> "<link rel=\"stylesheet\" href=\"" + stylesheet + "\">").collect(Collectors.toSet());
-        } else {
-            return Collections.emptySet();
-        }
     }
 
     private Optional<ViteDevServerConfig> getDevServerConfig(String category) {
