@@ -54,7 +54,7 @@ public class ViteDevServerConfigImpl implements ViteDevServerConfig {
 
         @AttributeDefinition(name = "port") String entry();
 
-        @AttributeDefinition(name = "port") String category();
+        @AttributeDefinition(name = "category") String category();
     }
 
     @Activate

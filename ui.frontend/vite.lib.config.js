@@ -1,19 +1,23 @@
 const path = require('path');
 
-const buildResourcesDir = (category) => {
+const buildManifest = (name) => {
+  return path.join(__dirname, 'dist', name, 'manifest.json');
+};
+
+const buildResourcesDir = (name) => {
   return path.join(
     __dirname,
     'dist',
-    category,
+    name,
     'etc.clientlibs',
     'aem-vite-demo',
     'clientlibs',
-    category,
+    name,
     'resources'
   );
 };
 
-const buildClientlibDir = (category) => {
+const buildClientlibDir = (name) => {
   return path.join(
     __dirname,
     '..',
@@ -25,41 +29,25 @@ const buildClientlibDir = (category) => {
     'apps',
     'aem-vite-demo',
     'clientlibs',
-    category
+    name
   );
 };
 
-//TODO: create a function to create new libs
+const createLib = (name, categories) => {
+  return {
+    manifest: buildManifest(name),
+    resourcesDir: buildResourcesDir(name),
+    clientlibDir: buildClientlibDir(name),
+    categories: [...categories],
+    properties: {
+      moduleIdentifier: 'vite',
+    },
+  };
+};
 
 module.exports = {
   libs: [
-    {
-      manifest: path.join(
-        __dirname,
-        'dist',
-        'clientlib-esmodule',
-        'manifest.json'
-      ),
-      resourcesDir: buildResourcesDir('clientlib-esmodule'),
-      clientlibDir: buildClientlibDir('clientlib-esmodule'),
-      categories: ['aem-vite-demo.esmodule'],
-      properties: {
-        moduleIdentifier: 'vite',
-      },
-    },
-    {
-      manifest: path.join(
-        __dirname,
-        'dist',
-        'clientlib-esmodule-another',
-        'manifest.json'
-      ),
-      resourcesDir: buildResourcesDir('clientlib-esmodule-another'),
-      clientlibDir: buildClientlibDir('clientlib-esmodule-another'),
-      categories: ['aem-vite-demo.esmodule.another'],
-      properties: {
-        moduleIdentifier: 'vite',
-      },
-    },
+    createLib('clientlib-esmodule', ['aem-vite-demo.esmodule']),
+    createLib('clientlib-esmodule-another', ['aem-vite-demo.esmodule.another']),
   ],
 };
