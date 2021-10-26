@@ -2,6 +2,6 @@
   "protocol": "http",
   "hostname": "localhost",
   "port": "3000",
-  "entry": "src/index.ts",
+  "entry": "src/main.ts",
   "category": "aem-vite-demo.esmodule"
 }

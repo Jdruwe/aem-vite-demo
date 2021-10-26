@@ -7,19 +7,19 @@ export default defineConfig({
     strictPort: true,
   },
   build: {
-    outDir: 'dist/aem-vite-demo.esmodule',
     brotliSize: false,
-    manifest: false,
+    manifest: true,
     rollupOptions: {
-      output: [
-        {
-          assetFileNames: '[ext]/[name][extname]',
-          chunkFileNames: 'chunks/[name].[hash].js',
-          entryFileNames: 'js/[name].js',
-        },
-      ],
+      output: {
+        assetFileNames:
+          'etc.clientlibs/aem-vite-demo/clientlibs/clientlib-esmodule/resources/[ext]/[name].[hash][extname]',
+        chunkFileNames:
+          'etc.clientlibs/aem-vite-demo/clientlibs/clientlib-esmodule/resources/chunks/[name].[hash].js',
+        entryFileNames:
+          'etc.clientlibs/aem-vite-demo/clientlibs/clientlib-esmodule/resources/js/[name].[hash].js',
+      },
       input: {
-        bundle: 'src/index.ts',
+        app: 'src/main.ts',
       },
     },
   },
