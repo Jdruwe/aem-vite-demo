@@ -1,0 +1,7 @@
+{
+  "protocol": "http",
+  "hostname": "localhost",
+  "port": "3001",
+  "entry": "src/another.ts",
+  "category": "aem-vite-demo.esmodule.another"
+}

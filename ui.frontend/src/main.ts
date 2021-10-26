@@ -7,3 +7,5 @@ createApp(Counter).mount('counter');
 document.getElementById('yellow').addEventListener('click', () => {
   import('./other-module');
 });
+
+console.log('>>> main module loaded');

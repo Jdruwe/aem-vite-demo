@@ -336,7 +336,7 @@
                         jcr:title="Generic Page"
                         sling:resourceType="wcm/core/components/policy/policy"
                         clientlibs="[aem-vite-demo.dependencies,aem-vite-demo.site]"
-                        esModuleClientlibs="[aem-vite-demo.esmodule,aem-vite-demo.esmodule.other]"
+                        esModuleClientlibs="[aem-vite-demo.esmodule,aem-vite-demo.esmodule.another]"
                         clientlibsJsHead="aem-vite-demo.dependencies">
                     <jcr:content jcr:primaryType="nt:unstructured"/>
                 </policy>

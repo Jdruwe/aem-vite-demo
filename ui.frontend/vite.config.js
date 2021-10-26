@@ -7,6 +7,7 @@ export default defineConfig({
     strictPort: true,
   },
   build: {
+    outDir: 'dist/clientlib-esmodule',
     brotliSize: false,
     manifest: true,
     rollupOptions: {
