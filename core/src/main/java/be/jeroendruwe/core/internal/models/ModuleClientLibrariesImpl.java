@@ -63,7 +63,7 @@ public class ModuleClientLibrariesImpl implements ModuleClientLibraries {
                 Map<String, Object> props = geClientLibraryProperties(library);
                 for (ModuleBasedClientLibService moduleBasedClientLibService : moduleBasedClientLibServices) {
                     if (moduleBasedClientLibService.isApplicable(props)) {
-                        includes.addAll(moduleBasedClientLibService.getIncludes(library));
+                        includes.addAll(moduleBasedClientLibService.getIncludes(library, props));
                         break;
                     }
                 }

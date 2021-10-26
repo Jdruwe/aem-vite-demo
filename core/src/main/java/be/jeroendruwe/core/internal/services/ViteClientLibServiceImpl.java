@@ -10,12 +10,17 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component(service = ModuleBasedClientLibService.class)
 @Designate(ocd = ViteClientLibServiceImpl.Config.class)
 public class ViteClientLibServiceImpl implements ModuleBasedClientLibService {
 
     private static final String IDENTIFIER = "vite";
+
+    private static final String PN_SCRIPTS = "scripts";
+    private static final String PN_PRELOADS = "preloads";
+    private static final String PN_STYLESHEETS = "stylesheets";
 
     private final List<ViteDevServerConfig> devServerConfigurations = new ArrayList<>();
     private Config config;
@@ -40,13 +45,12 @@ public class ViteClientLibServiceImpl implements ModuleBasedClientLibService {
     }
 
     @Override
-    public Set<String> getIncludes(ClientLibrary library) {
+    public Set<String> getIncludes(ClientLibrary library, Map<String, Object> props) {
         if (isViteDevServerEnabled()) {
             return getViteDevModules(library);
         } else {
-            //TODO: serve clientlibs using assets withing the library.
+            return getViteModules(props);
         }
-        return Collections.emptySet();
     }
 
     @ObjectClassDefinition(name = "Vite Dev Server Integration Configuration")
@@ -74,6 +78,41 @@ public class ViteClientLibServiceImpl implements ModuleBasedClientLibService {
             });
         }
         return libs;
+    }
+
+    private Set<String> getViteModules(Map<String, Object> props) {
+        Set<String> libs = new LinkedHashSet<>();
+        libs.addAll(getScripts(props));
+        libs.addAll(getPreloads(props));
+        libs.addAll(getStylesheets(props));
+        return libs;
+    }
+
+    private Set<String> getScripts(Map<String, Object> props) {
+        String[] scripts = (String[]) props.get(PN_SCRIPTS);
+        if (scripts != null) {
+            return Arrays.stream(scripts).map(script -> "<script type=\"module\" crossorigin src=\"" + script + "\"></script>").collect(Collectors.toSet());
+        } else {
+            return Collections.emptySet();
+        }
+    }
+
+    private Set<String> getPreloads(Map<String, Object> props) {
+        String[] preloads = (String[]) props.get(PN_PRELOADS);
+        if (preloads != null) {
+            return Arrays.stream(preloads).map(preload -> "<link rel=\"modulepreload\" href=\"" + preload + "\">").collect(Collectors.toSet());
+        } else {
+            return Collections.emptySet();
+        }
+    }
+
+    private Set<String> getStylesheets(Map<String, Object> props) {
+        String[] stylesheets = (String[]) props.get(PN_STYLESHEETS);
+        if (stylesheets != null) {
+            return Arrays.stream(stylesheets).map(stylesheet -> "<link rel=\"stylesheet\" href=\"" + stylesheet + "\">").collect(Collectors.toSet());
+        } else {
+            return Collections.emptySet();
+        }
     }
 
     private Optional<ViteDevServerConfig> getDevServerConfig(String category) {

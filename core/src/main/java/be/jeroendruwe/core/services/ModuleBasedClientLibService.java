@@ -10,5 +10,5 @@ public interface ModuleBasedClientLibService {
 
     boolean isApplicable(Map<String, Object> props);
 
-    Set<String> getIncludes(ClientLibrary clientLibrary);
+    Set<String> getIncludes(ClientLibrary clientLibrary, Map<String, Object> props);
 }
