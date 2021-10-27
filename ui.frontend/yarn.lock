@@ -79,10 +79,10 @@
     lodash "4.17.21"
     yargs "^16.2.0"
 
-"@jeroendruwe/vite-aem-clientlib-generator@^0.0.0":
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/@jeroendruwe/vite-aem-clientlib-generator/-/vite-aem-clientlib-generator-0.0.0.tgz#1427097739d844f08ec0a3490bd999c1dbc17043"
-  integrity sha512-HdBrC9XUbP9AlxZfI9ZnN4NtnJeGsjhxqTq2ug5ncs9o3UvTpBblDAZ16BVircjffNozOcCeienf7RbGrFKsVA==
+"@jeroendruwe/vite-aem-clientlib-generator@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@jeroendruwe/vite-aem-clientlib-generator/-/vite-aem-clientlib-generator-0.0.1.tgz#b5d8f9bf721008cc52fe86879274ff9006705704"
+  integrity sha512-37vRABucxFYst6pZDWuZAW876a2sR4WvWbiodwo5LhImVrU0ZCPGWKtP7qrlwiw5ZFMgFNMZcvLyGJw/YzDVPg==
   dependencies:
     "@oclif/command" "^1"
     "@oclif/config" "^1"
